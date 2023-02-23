@@ -83,6 +83,7 @@ class user:
         data = self.Post(f'{fgourl.server_addr_}/login/top?_userId={self.user_id_}')
 
         self.name_ = hashlib.md5(data['cache']['replaced']['userGame'][0]['name'].encode('utf-8')).hexdigest()
+#        self.name_ = data['cache']['replaced']['userGame'][0]['name']
         stone = data['cache']['replaced']['userGame'][0]['stone']
         lv = data['cache']['replaced']['userGame'][0]['lv']
         ticket = 0
@@ -96,21 +97,22 @@ class user:
         # 登陆天数
         login_days = data['cache']['updated']['userLogin'][0]['seqLoginCount']
         total_days = data['cache']['updated']['userLogin'][0]['totalLoginCount']
-        res = f'*{self.name_}*\n`登陆天数: {login_days}天 / {total_days}天\n'
+        #res = f'*{self.name_}*\n`登陆天数: {login_days}天 / {total_days}天\n'
+        res = f'*{self.name_}*\n`Daily Login: Streak of {login_days} / {total_days} Total Days\n'
 
         # 角色信息
-        res += f'等级: {lv}\n石头: {stone}\n呼符: {ticket}\n'
+        res += f'Level: {lv}\nSQ: {stone}\nTickets: {ticket}\n'
 
         # 现有体力
         act_max = data['cache']['replaced']['userGame'][0]['actMax']
         act_recover_at = data['cache']['replaced']['userGame'][0]['actRecoverAt']
         now_act = (act_max - (act_recover_at - mytime.GetTimeStamp()) / 300)
-        res += f'体力: {now_act} / {act_max}\n'
+        res += f'AP: {now_act} / {act_max}\n'
 
         # 友情点
         add_fp = data['response'][0]['success']['addFriendPoint']
         total_fp = data['cache']['replaced']['tblUserGame'][0]['friendPoint']
-        res += f'友情点: {add_fp} / {total_fp}`\n'
+        res += f'FP: {add_fp} / {total_fp}`\n'
 
         # 登陆奖励
         if 'seqLoginBonus' in data['response'][0]['success']:
